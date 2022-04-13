@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookRepository
+namespace BookRepository.Repository
 {
     public class BookRepository:IBookRepository
     {
