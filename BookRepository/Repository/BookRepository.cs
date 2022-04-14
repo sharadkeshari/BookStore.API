@@ -76,5 +76,23 @@ namespace BookRepository.Repository
                 await _bookStoreContext.SaveChangesAsync();
             }
         }
+
+        public async Task DeleteBookAsync(int bookId)
+        {
+            //if id is not primary key then below code is followed
+            var book = await _bookStoreContext.Books.Where(b=>b.Id==bookId).FirstOrDefaultAsync();
+            if (book != null)
+            {
+                _bookStoreContext.Books.Remove(book);
+                await _bookStoreContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteBookWithIdAsync(int bookId)
+        {
+            var book=new Books { Id = bookId };
+            _bookStoreContext.Books.Remove(book);
+            await _bookStoreContext.SaveChangesAsync();
+        }
     }
 }

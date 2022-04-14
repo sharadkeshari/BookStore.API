@@ -13,5 +13,7 @@ namespace BookRepository.Repository
         Task UpdateBookAsync(int bookId, BookModel bookModel);
         Task UpdateBookSingleDataBaseCallAsync(int bookId, BookModel bookModel);
         Task UpdateBookPatchAsync(int bookId, JsonPatchDocument bookModel);
+        Task DeleteBookAsync(int bookId);
+        Task DeleteBookWithIdAsync(int bookId);
     }
 }
