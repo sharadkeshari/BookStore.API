@@ -52,5 +52,18 @@ namespace BookRepository.Repository
                 await _bookStoreContext.SaveChangesAsync();
             }
         }
+
+        public async Task UpdateBookSingleDataBaseCallAsync(int bookId, BookModel bookModel)
+        {
+            var book = new Books
+            {
+                Id = bookId,
+                Title = bookModel.Title,
+                Description = bookModel.Description,
+            };
+            _bookStoreContext.Books.Update(book);
+            
+                await _bookStoreContext.SaveChangesAsync();
+        }
     }
 }

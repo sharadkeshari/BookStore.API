@@ -51,5 +51,12 @@ namespace BookStore.API.Controllers
             await _bookRepository.UpdateBookAsync(bookId, bookModel);
             return Ok();
         }
+        [HttpPut("sdbc/{bookId}")]
+        public async Task<IActionResult> UpdateBookSingledataBaseCall([FromRoute] int bookId,
+       [FromBody] BookModel bookModel)
+        {
+            await _bookRepository.UpdateBookSingleDataBaseCallAsync(bookId, bookModel);
+            return Ok();
+        }
     }
 }

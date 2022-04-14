@@ -10,5 +10,6 @@ namespace BookRepository.Repository
         Task<BookModel> GetBookByIdAsync(int bookId);
         Task<int> AddBookAsync(BookModel bookModel);
         Task UpdateBookAsync(int bookId, BookModel bookModel);
+        Task UpdateBookSingleDataBaseCallAsync(int bookId, BookModel bookModel);
     }
 }
