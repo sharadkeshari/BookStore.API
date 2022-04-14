@@ -41,5 +41,16 @@ namespace BookRepository.Repository
             await _bookStoreContext.SaveChangesAsync();
             return book.Id;
         }
+
+        public async Task UpdateBookAsync(int bookId,BookModel bookModel)
+        {
+            var book = await _bookStoreContext.Books.FindAsync(bookId);
+            if(book != null)
+            {
+                book.Title=bookModel.Title;
+                book.Description=bookModel.Description;
+                await _bookStoreContext.SaveChangesAsync();
+            }
+        }
     }
 }

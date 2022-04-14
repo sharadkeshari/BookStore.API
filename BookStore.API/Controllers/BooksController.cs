@@ -43,5 +43,13 @@ namespace BookStore.API.Controllers
             var bookId = await _bookRepository.AddBookAsync(bookModel);
             return CreatedAtAction(nameof(GetBookById), new { bookId = bookId, controller = "books" },bookId);
         }
+
+        [HttpPut("{bookId}")]
+        public async Task<IActionResult> UpdateBook([FromRoute]int bookId,
+        [FromBody] BookModel bookModel)
+        {
+            await _bookRepository.UpdateBookAsync(bookId, bookModel);
+            return Ok();
+        }
     }
 }
