@@ -1,4 +1,5 @@
-﻿using BookRepository.Data;
+﻿using AutoMapper;
+using BookRepository.Data;
 using BookRepository.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
@@ -13,21 +14,32 @@ namespace BookRepository.Repository
     public class BookRepository:IBookRepository
     {
         private BookStoreContext _bookStoreContext;
+        private readonly IMapper applicationMapper;
 
-        public BookRepository(BookStoreContext bookStoreContext)
+        public BookRepository(BookStoreContext bookStoreContext,IMapper applicationMapper)
         {
             _bookStoreContext = bookStoreContext;
+            this.applicationMapper = applicationMapper;
         }
         public async Task<List<BookModel>> GetAllBooksAsync()
         {
-            var records = await _bookStoreContext.Books.Select(m=>new BookModel { Description= m.Description, Title=m.Title, Id=m.Id }).ToListAsync();
-            return records;
+            //without auto mapper
+            //var records = await _bookStoreContext.Books.Select(m=>new BookModel { Description= m.Description, Title=m.Title, Id=m.Id }).ToListAsync();
+
+            //with auto mapper
+            var records = await _bookStoreContext.Books.ToListAsync();
+
+            return applicationMapper.Map<List<BookModel>>(records);
         }
 
         public async Task<BookModel> GetBookByIdAsync(int bookId)
         {
-            var record = await _bookStoreContext.Books.Where(m=>m.Id==bookId).Select(m => new BookModel { Description = m.Description, Title = m.Title, Id = m.Id }).FirstOrDefaultAsync();
-            return record;
+            //without auto mapper
+            //var record = await _bookStoreContext.Books.Where(m=>m.Id==bookId).Select(m => new BookModel { Description = m.Description, Title = m.Title, Id = m.Id }).FirstOrDefaultAsync();
+            
+            //with Auto mapper
+            var record=await _bookStoreContext.Books.FirstOrDefaultAsync(m=>m.Id==bookId);
+            return applicationMapper.Map<BookModel>(record);
         }
 
         public async Task<int> AddBookAsync(BookModel bookModel)
