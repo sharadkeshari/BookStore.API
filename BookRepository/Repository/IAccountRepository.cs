@@ -6,6 +6,6 @@ namespace BookRepository.Repository
 {
     public interface IAccountRepository
     {
-        Task<IdentityResult> SignUpAsync(SignUpModel signUpModel)
+        Task<IdentityResult> SignUpAsync(SignUpModel signUpModel);
     }
 }
