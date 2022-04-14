@@ -1,4 +1,5 @@
 ﻿using BookRepository.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,5 +12,6 @@ namespace BookRepository.Repository
         Task<int> AddBookAsync(BookModel bookModel);
         Task UpdateBookAsync(int bookId, BookModel bookModel);
         Task UpdateBookSingleDataBaseCallAsync(int bookId, BookModel bookModel);
+        Task UpdateBookPatchAsync(int bookId, JsonPatchDocument bookModel);
     }
 }
