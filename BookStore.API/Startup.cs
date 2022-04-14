@@ -1,6 +1,8 @@
 using BookRepository.Data;
+using BookRepository.Helper;
 using BookRepository.Models;
 using BookRepository.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,10 +14,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BookStore.API
@@ -38,6 +42,27 @@ namespace BookStore.API
                 .AddEntityFrameworkStores<BookStoreContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultScheme=JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(option =>
+            {
+                option.SaveToken = true;
+                option.RequireHttpsMetadata = false;
+                TokenValidationParameters tokenValidationParameters = new TokenValidationParameters();
+
+
+                tokenValidationParameters.ValidateIssuer = true;
+                tokenValidationParameters.ValidateAudience = true;
+                tokenValidationParameters.ValidAudience = Configuration["JWT:ValidAudience"];
+                tokenValidationParameters.ValidIssuer = Configuration["JWT:ValidIssuer"];
+                tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]));
+
+                option.TokenValidationParameters = tokenValidationParameters;
+            });
+
             services.AddControllers().AddNewtonsoftJson();
             services.AddSwaggerGen(c =>
             {
@@ -45,7 +70,7 @@ namespace BookStore.API
             });
             services.TryAddTransient<IBookRepository, BookRepository.Repository.BookRepository>();
                     services.TryAddTransient<IAccountRepository,AccountRepository>();
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(ApplicationMapper));
 
 
             services.AddCors(option =>
@@ -73,6 +98,7 @@ namespace BookStore.API
 
             app.UseCors();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
