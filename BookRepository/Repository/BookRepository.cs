@@ -28,5 +28,18 @@ namespace BookRepository.Repository
             var record = await _bookStoreContext.Books.Where(m=>m.Id==bookId).Select(m => new BookModel { Description = m.Description, Title = m.Title, Id = m.Id }).FirstOrDefaultAsync();
             return record;
         }
+
+        public async Task<int> AddBookAsync(BookModel bookModel)
+        {
+            var book = new Books
+            {
+                Title = bookModel.Title,
+                Description = bookModel.Description,
+            };
+
+            await _bookStoreContext.Books.AddAsync(book);
+            await _bookStoreContext.SaveChangesAsync();
+            return book.Id;
+        }
     }
 }
