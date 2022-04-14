@@ -22,5 +22,11 @@ namespace BookRepository.Repository
             var records = await _bookStoreContext.Books.Select(m=>new BookModel { Description= m.Description, Title=m.Title, Id=m.Id }).ToListAsync();
             return records;
         }
+
+        public async Task<BookModel> GetBookByIdAsync(int bookId)
+        {
+            var record = await _bookStoreContext.Books.Where(m=>m.Id==bookId).Select(m => new BookModel { Description = m.Description, Title = m.Title, Id = m.Id }).FirstOrDefaultAsync();
+            return record;
+        }
     }
 }
